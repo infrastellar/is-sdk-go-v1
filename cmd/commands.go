@@ -3,6 +3,7 @@ package iscmd
 import (
 	"github.com/infrastellar/is-sdk-go-v1/cmd/internal/config"
 	"github.com/infrastellar/is-sdk-go-v1/cmd/internal/program"
+	"github.com/infrastellar/is-sdk-go-v1/cmd/internal/space"
 
 	"github.com/urfave/cli/v2"
 )
@@ -26,6 +27,16 @@ var (
 			program.SubCmdNew,
 			program.SubCmdSet,
 			program.SubCmdUnSet,
+		},
+	}
+
+	Space = &cli.Command{
+		Name:        "space",
+		Usage:       "TODO",
+		Description: "TODO",
+		Subcommands: []*cli.Command{
+			space.SubCmdNew,
+			space.SubCmdValidate,
 		},
 	}
 )

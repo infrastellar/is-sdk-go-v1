@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
+	"io"
 	"os"
 	"path/filepath"
 
@@ -23,6 +24,11 @@ const (
 **/mission.tfvars
 **/mission.tf
 `
+	EnvironmentsDir string = "environments"
+	SpacesDir       string = "spaces"
+	MissionsDir     string = "missions"
+	RootDir         string = "root"
+	ModulesDir      string = "modules"
 )
 
 var ActivePath string
@@ -50,6 +56,42 @@ func BeforeProgram() error {
 	ActivePath = program
 
 	return nil
+}
+
+func Read() (*Program, error) {
+	var program Program
+	ap, err := RetrieveActiveProgram()
+	if err != nil {
+		return &program, err
+	}
+
+	pn := filepath.Base(ap)
+	if err != nil {
+		return &program, err
+	}
+
+	cfg, err := config.Read()
+	if err != nil {
+		return &program, err
+	}
+
+	prgcf := filepath.Join(cfg.ProgramsDirectory, fmt.Sprintf("%s.json", pn))
+	jf, err := os.Open(prgcf)
+	if err != nil {
+		return &program, err
+	}
+	defer jf.Close()
+
+	jsonb, err := io.ReadAll(jf)
+	if err != nil {
+		return &program, err
+	}
+	err = json.Unmarshal(jsonb, &program)
+	if err != nil {
+		return &program, err
+	}
+
+	return &program, err
 }
 
 func RetrieveActiveProgram() (program string, err error) {
@@ -124,7 +166,7 @@ func (p *Program) RenderToDisk() error {
 
 	p.Path = fullpath
 
-	for _, dir := range []string{"environments", "spaces", "missions", "root", "modules"} {
+	for _, dir := range []string{} {
 		nd := filepath.Join(".", dir)
 		err = os.MkdirAll(nd, 0o750)
 		if err != nil {

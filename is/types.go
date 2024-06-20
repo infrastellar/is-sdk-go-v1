@@ -24,16 +24,6 @@ type Root struct {
 	Region *Region `json:"region"`
 }
 
-type BackendConfig struct {
-	Bucket        string `json:"bucket"`
-	DynamodbTable string `json:"dynamodb_table"`
-	Encrypt       bool   `json:"encrypt"`
-	KmsKeyID      string `json:"kms_key_id"`
-	Region        string `json:"region"`
-	Key           string `json:"key,omitempty"`
-	RoleArn       string `json:"role_arn,omitempty"`
-}
-
 type EnvRegion struct {
 	Region
 	Network     map[string]EnvRegionNetwork `json:"network,omitempty"`
