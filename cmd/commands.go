@@ -39,4 +39,15 @@ var (
 			space.SubCmdValidate,
 		},
 	}
+
+	Mission = &cli.Command{
+		Name:        "mission",
+		Usage:       "TODO",
+		Description: "TODO",
+		Subcommands: []*cli.Command{
+			mission.SubCmdNew,
+			mission.SubCmdAdd,
+			mission.SubCmdList,
+		},
+	}
 )

@@ -23,22 +23,3 @@ type Region struct {
 type Root struct {
 	Region *Region `json:"region"`
 }
-
-type EnvRegion struct {
-	Region
-	Network     map[string]EnvRegionNetwork `json:"network,omitempty"`
-	Arrangement int                         `json:"arrangement"`
-	Status      EnvRegionStatus             `json:"status"`
-}
-
-type EnvRegionNetwork struct{}
-
-type EnvRegionStatus struct{}
-
-type Environment struct {
-	Name     string            `json:"name"`
-	Id       string            `json:"id"`
-	Tier     string            `json:"tier"`
-	Tags     map[string]string `json:"tags"`
-	Features map[string]bool   `json:"features"`
-}
