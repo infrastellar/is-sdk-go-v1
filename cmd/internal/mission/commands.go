@@ -2,7 +2,6 @@ package mission
 
 import (
 	"github.com/infrastellar/is-sdk-go-v1/mission"
-	"github.com/infrastellar/is-sdk-go-v1/program"
 
 	"github.com/urfave/cli/v2"
 )

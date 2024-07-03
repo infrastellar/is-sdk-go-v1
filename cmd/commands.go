@@ -2,6 +2,7 @@ package iscmd
 
 import (
 	"github.com/infrastellar/is-sdk-go-v1/cmd/internal/config"
+	"github.com/infrastellar/is-sdk-go-v1/cmd/internal/mission"
 	"github.com/infrastellar/is-sdk-go-v1/cmd/internal/program"
 	"github.com/infrastellar/is-sdk-go-v1/cmd/internal/space"
 
@@ -24,6 +25,7 @@ var (
 		Description: "TODO",
 		Subcommands: []*cli.Command{
 			program.SubCmdActive,
+			program.SubCmdDescribe,
 			program.SubCmdNew,
 			program.SubCmdSet,
 			program.SubCmdUnSet,

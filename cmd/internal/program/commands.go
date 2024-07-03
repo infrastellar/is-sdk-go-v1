@@ -1,6 +1,7 @@
 package program
 
 import (
+	"encoding/json"
 	"fmt"
 	"os"
 
@@ -23,7 +24,29 @@ var (
 			if err != nil {
 				return err
 			}
-			fmt.Println(pf)
+			fmt.Println(pf.Path)
+
+			return nil
+		},
+	}
+
+	SubCmdDescribe = &cli.Command{
+		Name:        "describe",
+		Aliases:     []string{"desc"},
+		Usage:       "XXXXX",
+		Description: "XXXXX",
+		Action: func(cCtx *cli.Context) error {
+			pf, err := program.RetrieveActiveProgram()
+			if err != nil {
+				return err
+			}
+
+			b, err := json.MarshalIndent(pf, "", "  ")
+			if err != nil {
+				return err
+			}
+
+			fmt.Println(string(b))
 
 			return nil
 		},

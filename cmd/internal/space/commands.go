@@ -51,7 +51,7 @@ var (
 			},
 		},
 		Action: func(cCtx *cli.Context) error {
-			prg, err := program.Read()
+			prg, err := program.RetrieveActiveProgram()
 			if err != nil {
 				return err
 			}

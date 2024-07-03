@@ -9,6 +9,7 @@ import (
 	"path/filepath"
 
 	"github.com/infrastellar/is-sdk-go-v1/config"
+	"github.com/infrastellar/is-sdk-go-v1/environment"
 	"github.com/infrastellar/is-sdk-go-v1/is"
 )
 
@@ -35,9 +36,13 @@ var ActivePath string
 
 // Program represents a program object and data we need to interact with it
 type Program struct {
-	Name string   `json:"name"`
-	Root *is.Root `json:"root,omitempty"`
-	Path string   `json:"path,omitempty"`
+	Name         string   `json:"name"`
+	Root         *is.Root `json:"root,omitempty"`
+	Path         string   `json:"path,omitempty"`
+	Environments []struct {
+		Name string `json:"name"`
+		ID   string `json:"id"`
+	} `json:"environments"`
 }
 
 // BeforeProgram is used prior to any actions against the program to ensure the
@@ -48,64 +53,54 @@ func BeforeProgram() error {
 		return err
 	}
 
-	err = os.Chdir(program)
+	err = os.Chdir(program.Path)
 	if err != nil {
 		return err
 	}
 
-	ActivePath = program
+	ActivePath = program.Path
 
 	return nil
 }
 
-func Read() (*Program, error) {
-	var program Program
-	ap, err := RetrieveActiveProgram()
-	if err != nil {
-		return &program, err
-	}
-
-	pn := filepath.Base(ap)
-	if err != nil {
-		return &program, err
-	}
-
+func Read(name string) (program *Program, err error) {
 	cfg, err := config.Read()
 	if err != nil {
-		return &program, err
+		return program, err
 	}
 
-	prgcf := filepath.Join(cfg.ProgramsDirectory, fmt.Sprintf("%s.json", pn))
+	prgcf := filepath.Join(cfg.ProgramsDirectory, fmt.Sprintf("%s.json", name))
 	jf, err := os.Open(prgcf)
 	if err != nil {
-		return &program, err
+		return program, err
 	}
 	defer jf.Close()
 
 	jsonb, err := io.ReadAll(jf)
 	if err != nil {
-		return &program, err
+		return program, err
 	}
 	err = json.Unmarshal(jsonb, &program)
 	if err != nil {
-		return &program, err
+		return program, err
 	}
 
-	return &program, err
+	return program, err
 }
 
-func RetrieveActiveProgram() (program string, err error) {
-	program, ok := os.LookupEnv(is.EnvVarPROGRAM)
+func RetrieveActiveProgram() (program *Program, err error) {
+	var pname string
+	pname, ok := os.LookupEnv(is.EnvVarPROGRAM)
 	if !ok {
 		cfgdir := config.ConfigDirectory()
 		pf, err := os.ReadFile(filepath.Join(cfgdir, ActiveProgramFileName))
 		if errors.Is(err, os.ErrNotExist) {
-			return "", fmt.Errorf("active program not found, variable %s not set", is.EnvVarPROGRAM)
+			return program, fmt.Errorf("active program not found, variable %s not set", is.EnvVarPROGRAM)
 		}
-		program = string(pf[:])
+		pname = string(pf[:])
 	}
 
-	_, err = os.Stat(program)
+	program, err = Read(pname)
 	if err != nil {
 		return program, err
 	}
@@ -141,6 +136,10 @@ func UnsetProgram() error {
 	if err != nil {
 		return err
 	}
+	return nil
+}
+
+func (p *Program) AddEnvironment(e *environment.Environment) error {
 	return nil
 }
 
@@ -203,7 +202,7 @@ func (p *Program) RenderToDisk() error {
 	fmt.Println("::: Infrastellar Space Program created.")
 	fmt.Println("")
 	fmt.Println("... In order to start using this program, set the following:")
-	fmt.Printf("\texport %s=%s\n", is.EnvVarPROGRAM, p.Path)
+	fmt.Printf("\texport %s=%s\n", is.EnvVarPROGRAM, p.Name)
 
 	return nil
 }

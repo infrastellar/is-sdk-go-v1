@@ -17,12 +17,12 @@ type Mission struct {
 }
 
 func (m *Mission) RenderToDisk() error {
-	prg, err := program.RetrieveActiveProgram()
+	program, err := program.RetrieveActiveProgram()
 	if err != nil {
 		return err
 	}
 
-	mpath := filepath.Join(prg, MissionBaseDir)
+	mpath := filepath.Join(program.Path, MissionBaseDir)
 	_, err = os.Stat(mpath)
 	if err != nil {
 		if os.IsNotExist(err) {
