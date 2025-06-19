@@ -54,9 +54,7 @@ var (
 		},
 		Action: func(ctx context.Context, cli *cli.Command) error {
 			newRegion := is.NewRegion(flagProvider, flagRegion, flagAccountID)
-
 			newRoot := is.NewRoot(newRegion)
-
 			cfg, err := config.ReadConfig()
 			if err != nil {
 				return err
@@ -68,6 +66,7 @@ var (
 			if err != nil {
 				return err
 			}
+
 			return nil
 		},
 	}

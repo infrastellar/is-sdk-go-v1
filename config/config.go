@@ -23,6 +23,7 @@ type ConfigOptions struct {
 	LogsDirectory     string                       `json:"logs"`
 	KeyringsDirectory string                       `json:"keyrings"`
 	ProgramsDirectory string                       `json:"programs"`
+	Templates         map[string]string            `json:"templates,omitempty"`
 	Root              *is.Root                     `json:"root,omitempty"`
 	Commands          map[string]map[string]string `json:"commands"`
 
@@ -80,9 +81,22 @@ func WithRootConfig(root *is.Root) ConfigOptionsFunc {
 	}
 }
 
+func WithProgramTemplate(giturl string) ConfigOptionsFunc {
+	return func(o *ConfigOptions) error {
+		templates := o.Templates
+		templates["program"] = giturl
+		o.Templates = templates
+		return nil
+	}
+}
+
 func WithDefaults() ConfigOptionsFunc {
 	return func(o *ConfigOptions) error {
+		templates := map[string]string{
+			"program": is.ProgramTemplateURL,
+		}
 		o.configPath = ConfigFilePath()
+		o.Templates = templates
 		o.KeyringsDirectory = filepath.Join(ConfigDirectory(), "keyrings")
 		o.LogsDirectory = filepath.Join(ConfigDirectory(), "logs")
 		o.ProgramsDirectory = filepath.Join(ConfigDirectory(), "programs")

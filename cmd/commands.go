@@ -35,7 +35,6 @@ var (
 		Description: "TODO",
 		Commands: []*cli.Command{
 			space.SubCmdNew,
-			space.SubCmdValidate,
 		},
 	}
 

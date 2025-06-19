@@ -9,12 +9,13 @@ import (
 )
 
 var (
-	flagMission string
+	flagEnvironment string
+	flagMission     string
 
 	SubCmdNew = &cli.Command{
 		Name:        "new",
-		Usage:       "XXXXX",
-		Description: "XXXXX",
+		Usage:       "Add a new mission setup",
+		Description: "Add a new mission setup",
 		Flags: []cli.Flag{
 			&cli.StringFlag{
 				Name:        "mission",
@@ -35,14 +36,20 @@ var (
 
 	SubCmdAdd = &cli.Command{
 		Name:        "add",
-		Usage:       "XXXXX",
-		Description: "XXXXX",
+		Usage:       "Add provided mission to the provided environment",
+		Description: "Add provided mission to the provided environment",
 		Flags: []cli.Flag{
 			&cli.StringFlag{
 				Name:        "mission",
 				Aliases:     []string{"m"},
 				Required:    true,
 				Destination: &flagMission,
+			},
+			&cli.StringFlag{
+				Name:        "environment",
+				Aliases:     []string{"e"},
+				Required:    true,
+				Destination: &flagEnvironment,
 			},
 		},
 		Action: func(ctx context.Context, cli *cli.Command) error {
@@ -52,14 +59,14 @@ var (
 
 	SubCmdList = &cli.Command{
 		Name:        "list",
-		Usage:       "XXXXX",
-		Description: "XXXXX",
+		Usage:       "List missions for the provided environment",
+		Description: "List missions for the provided environment",
 		Flags: []cli.Flag{
 			&cli.StringFlag{
-				Name:        "mission",
-				Aliases:     []string{"m"},
+				Name:        "environment",
+				Aliases:     []string{"e"},
 				Required:    true,
-				Destination: &flagMission,
+				Destination: &flagEnvironment,
 			},
 		},
 		Action: func(ctx context.Context, cli *cli.Command) error {

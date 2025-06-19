@@ -17,9 +17,13 @@ var (
 	flagProvider  string
 
 	SubCmdNew = &cli.Command{
-		Name:        "new",
-		Usage:       "XXXXX",
-		Description: "XXXXX",
+		Name:  "new",
+		Usage: "Create a new space for storing configuration",
+		Description: `Create a new space for storing configuration.
+
+Uses the provided configuration to create the space. If a region,
+account-id, and provider are not specified the Root configuration
+from the configuration is used.`,
 		Flags: []cli.Flag{
 			&cli.StringFlag{
 				Name:        "space",
@@ -28,22 +32,20 @@ var (
 				Destination: &flagSpace,
 			},
 			&cli.StringFlag{
+				Name:        "director",
+				Aliases:     []string{"d"},
+				Required:    true,
+				Destination: &flagDirector,
+			},
+			&cli.StringFlag{
 				Name:        "region",
 				Aliases:     []string{"r"},
-				Required:    true,
 				Destination: &flagRegion,
 			},
 			&cli.StringFlag{
 				Name:        "account-id",
 				Aliases:     []string{"a"},
-				Required:    true,
 				Destination: &flagAccountID,
-			},
-			&cli.StringFlag{
-				Name:        "director",
-				Aliases:     []string{"d"},
-				Required:    true,
-				Destination: &flagDirector,
 			},
 			&cli.StringFlag{
 				Name:        "provider",
@@ -58,15 +60,6 @@ var (
 				return err
 			}
 			fmt.Println(prg.Path)
-			return nil
-		},
-	}
-
-	SubCmdValidate = &cli.Command{
-		Name:        "validate",
-		Usage:       "XXXXX",
-		Description: "XXXXX",
-		Action: func(ctx context.Context, cli *cli.Command) error {
 			return nil
 		},
 	}
