@@ -10,6 +10,13 @@ import (
 )
 
 var (
+	Commands = []*cli.Command{
+		Config,
+		Mission,
+		Program,
+		Space,
+	}
+
 	Config = &cli.Command{
 		Name:        "config",
 		Usage:       "TODO",
