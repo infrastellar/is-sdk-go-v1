@@ -1,9 +1,14 @@
 package program
 
 import (
+	"encoding/json"
+	"fmt"
 	"os"
+	"os/exec"
 	"path/filepath"
+	"strings"
 
+	"github.com/infrastellar/is-sdk-go-v1/config"
 	"github.com/infrastellar/is-sdk-go-v1/is"
 )
 
@@ -25,6 +30,52 @@ const (
 	ModulesDir      string = "modules"
 )
 
+func NewProgramFromTemplate(name string) (*is.Program, error) {
+	cfg, err := config.ReadConfig()
+	if err != nil {
+		return nil, err
+	}
+
+	ptmpl, ok := cfg.Templates["program"]
+	if !ok {
+		return nil, fmt.Errorf("unable to find program template")
+	}
+
+	pName := fmt.Sprintf("%s-program", strings.ToLower(name))
+	pPath, err := filepath.Abs(fmt.Sprintf("./%s", pName))
+	if err != nil {
+		return nil, err
+	}
+
+	cmd := exec.Command("git", "clone", ptmpl, pName)
+	err = cmd.Run()
+	if err != nil {
+		return nil, err
+	}
+
+	program := &is.Program{
+		Name: name,
+		Path: pPath,
+	}
+
+	return program, nil
+}
+
+func ReadProgram(path string) (*is.Program, error) {
+	err := is.DirExists(path)
+	if err != nil {
+		return nil, err
+	}
+
+	name := filepath.Base(path)
+
+	program := &is.Program{
+		Name: name,
+		Path: path,
+	}
+	return program, nil
+}
+
 func RetrieveActiveProgram() (*is.Program, error) {
 	programPath, ok := os.LookupEnv(is.EnvVarPROGRAM)
 	if ok {
@@ -41,19 +92,22 @@ func RetrieveActiveProgram() (*is.Program, error) {
 	return program, nil
 }
 
-type ActiveProgram string
-
-func ReadProgram(path string) (*is.Program, error) {
-	err := is.DirExists(path)
+func RenderProgramManifestToDisk(p *is.Program) error {
+	cfg, err := config.ReadConfig()
 	if err != nil {
-		return nil, err
+		return err
+	}
+	json, err := json.MarshalIndent(p, "", "  ")
+	if err != nil {
+		return err
 	}
 
-	name := filepath.Base(path)
-
-	program := &is.Program{
-		Name: name,
-		Path: path,
+	manifest := fmt.Sprintf("%s.program.json", p.Name)
+	prgPath := filepath.Join(cfg.ProgramsDirectory, manifest)
+	err = os.WriteFile(prgPath, json, 0o640)
+	if err != nil {
+		return err
 	}
-	return program, nil
+
+	return nil
 }

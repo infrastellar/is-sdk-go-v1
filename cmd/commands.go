@@ -25,6 +25,7 @@ var (
 		Usage:       "TODO",
 		Description: "TODO",
 		Commands: []*cli.Command{
+			program.SubCmdCreate,
 			program.SubCmdActive,
 		},
 	}

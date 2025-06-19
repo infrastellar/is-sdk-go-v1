@@ -10,6 +10,7 @@ import (
 )
 
 var (
+	flagName      string
 	flagProvider  string
 	flagRegion    string
 	flagAccountID string
@@ -24,6 +25,34 @@ var (
 				return err
 			}
 			fmt.Println(program.Path)
+
+			return nil
+		},
+	}
+
+	SubCmdCreate = &cli.Command{
+		Name:        "create",
+		Usage:       "Create a new program using the default template",
+		Description: "Create a new program using the default template",
+		Flags: []cli.Flag{
+			&cli.StringFlag{
+				Name:        "name",
+				Usage:       "Name of new program",
+				Aliases:     []string{"n"},
+				Required:    true,
+				Destination: &flagName,
+			},
+		},
+		Action: func(ctx context.Context, cli *cli.Command) error {
+			prg, err := program.NewProgramFromTemplate(flagName)
+			if err != nil {
+				return err
+			}
+
+			err = program.RenderProgramManifestToDisk(prg)
+			if err != nil {
+				return err
+			}
 
 			return nil
 		},
