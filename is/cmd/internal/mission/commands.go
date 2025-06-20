@@ -3,8 +3,7 @@ package mission
 import (
 	"context"
 
-	"github.com/infrastellar/is-sdk-go-v1/is/mission"
-
+	"github.com/infrastellar/is-sdk-go-v1/is"
 	"github.com/urfave/cli/v3"
 )
 
@@ -25,8 +24,8 @@ var (
 			},
 		},
 		Action: func(ctx context.Context, cli *cli.Command) error {
-			m := mission.Mission{Name: flagMission}
-			err := m.RenderToDisk()
+			m := is.Mission{Name: flagMission}
+			err := RenderToDisk(m)
 			if err != nil {
 				return err
 			}
