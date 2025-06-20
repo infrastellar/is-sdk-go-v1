@@ -8,8 +8,9 @@ import (
 	"os"
 	"path/filepath"
 
-	"github.com/adrg/xdg"
 	"github.com/infrastellar/is-sdk-go-v1/is"
+
+	"github.com/adrg/xdg"
 )
 
 const (

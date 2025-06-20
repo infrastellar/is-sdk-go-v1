@@ -39,7 +39,7 @@ type Environment struct {
 	Status   EnvironmentStatus `json:"status,omitempty"`
 }
 
-type Environments []Environment
+type Environments []*Environment
 
 // EnvironmentRegionNetwork prepares a network configuration for a region
 type EnvironmentRegionNetwork struct {
@@ -71,13 +71,36 @@ type EnvironmentRegion struct {
 	Status  EnvironmentRegionStatus
 }
 
+type Version struct {
+	Commit string `json:"commit,omitempty"`
+}
+
 // Program represents a program object and data we need to interact with it
 type Program struct {
-	Name    string `json:"name"`
-	Path    string `json:"path,omitempty"`
-	URL     string `json:"url,omitempty"`
-	Version struct {
-		Commit string `json:"commit,omitempty"`
-	}
-	Environments Environments
+	Name         string       `json:"name"`
+	Path         string       `json:"path,omitempty"`
+	URL          string       `json:"url,omitempty"`
+	Version      Version      `json:"version,omitempty"`
+	Environments Environments `json:"environments"`
+}
+
+type Mission struct {
+	Name    string        `json:"name"`
+	Vars    MissionVars   `json:"vars,omitempty"`
+	Path    string        `json:"path"`
+	Version Version       `json:"version,omitempty"`
+	Needs   []string      `json:"needs,omitempty"`
+	Locked  MissionLocks  `json:"locked,omitempty"`
+	Status  MissionStatus `json:"status,omitempty"`
+}
+
+type MissionVars struct {
+	Path string `json:"path,omitempty"`
+	URL  string `json:"url,omitempty"`
+}
+
+type MissionLocks []string
+
+type MissionStatus struct {
+	Enabled bool `json:"enabled"`
 }

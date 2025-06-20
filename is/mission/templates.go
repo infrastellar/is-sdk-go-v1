@@ -11,8 +11,6 @@ locals {
   ### MISSION DEFAULTS
   mission_defaults = {
     name = "{{.MissionName}}"
-    id   = "{{.MissionID}}"
-
   }
   mission = merge(local.mission_defaults, var.mission)
 
