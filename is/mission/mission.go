@@ -5,7 +5,7 @@ import (
 	"os"
 	"path/filepath"
 
-	"github.com/infrastellar/is-sdk-go-v1/program"
+	"github.com/infrastellar/is-sdk-go-v1/is/program"
 )
 
 const (
@@ -14,6 +14,7 @@ const (
 
 type Mission struct {
 	Name string
+	ID   string
 }
 
 func (m *Mission) RenderToDisk() error {
@@ -58,11 +59,15 @@ func (m *Mission) RenderToDisk() error {
 		}
 	}
 
+	// missiontmpl := template.Must(template.New("missiontf").Parse(MissionFileTF))
 	mtf, err := os.Create(fmt.Sprintf("%s.tf", m.Name))
 	if err != nil {
 		return err
 	}
-	mtf.Close()
+	defer mtf.Close()
+	//missiontmpl.ExecuteTemplate(mtf, "missiontf", struct{
+	//    MissionName:
+	//})
 
 	mex, err := os.Create(fmt.Sprintf("%s.tfvars.example", m.Name))
 	if err != nil {

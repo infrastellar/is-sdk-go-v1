@@ -3,7 +3,7 @@ package mission
 import (
 	"context"
 
-	"github.com/infrastellar/is-sdk-go-v1/mission"
+	"github.com/infrastellar/is-sdk-go-v1/is/mission"
 
 	"github.com/urfave/cli/v3"
 )

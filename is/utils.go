@@ -14,6 +14,5 @@ func DirExists(dir string) error {
 			return err
 		}
 	}
-
 	return nil
 }

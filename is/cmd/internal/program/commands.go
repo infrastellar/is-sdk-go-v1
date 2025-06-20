@@ -4,7 +4,7 @@ import (
 	"context"
 	"fmt"
 
-	"github.com/infrastellar/is-sdk-go-v1/program"
+	"github.com/infrastellar/is-sdk-go-v1/is/program"
 
 	"github.com/urfave/cli/v3"
 )

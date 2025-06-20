@@ -8,8 +8,8 @@ import (
 	"path/filepath"
 	"strings"
 
-	"github.com/infrastellar/is-sdk-go-v1/config"
 	"github.com/infrastellar/is-sdk-go-v1/is"
+	"github.com/infrastellar/is-sdk-go-v1/is/config"
 )
 
 const (

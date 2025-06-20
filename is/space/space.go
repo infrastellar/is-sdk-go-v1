@@ -7,7 +7,7 @@ import (
 	"text/template"
 
 	"github.com/infrastellar/is-sdk-go-v1/is"
-	"github.com/infrastellar/is-sdk-go-v1/program"
+	"github.com/infrastellar/is-sdk-go-v1/is/program"
 )
 
 const (

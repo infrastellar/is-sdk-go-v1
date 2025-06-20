@@ -4,8 +4,9 @@ package config
 import (
 	"context"
 
-	"github.com/infrastellar/is-sdk-go-v1/config"
-	"github.com/infrastellar/is-sdk-go-v1/is"
+	"github.com/infrastellar/is-sdk-go-v1/is/config"
+	"github.com/infrastellar/is-sdk-go-v1/is/region"
+	"github.com/infrastellar/is-sdk-go-v1/is/root"
 
 	"github.com/urfave/cli/v3"
 )
@@ -53,8 +54,8 @@ var (
 			},
 		},
 		Action: func(ctx context.Context, cli *cli.Command) error {
-			newRegion := is.NewRegion(flagProvider, flagRegion, flagAccountID)
-			newRoot := is.NewRoot(newRegion)
+			newRegion := region.NewRegion(flagProvider, flagRegion, flagAccountID)
+			newRoot := root.NewRoot(newRegion)
 			cfg, err := config.ReadConfig()
 			if err != nil {
 				return err

@@ -1,19 +1,18 @@
+// Package is
 package is
 
-// Region is an important type throughout the Infrastellar universe and both
-// maps to provider rregions and infrastellar regions. We use a base type here
-// to cover the translation from provider to our regions, but also to store
-// common data between them all.
+// Region We use a base type here to cover the translation from provider to
+// our regions, but also to store common data between them all.
 type Region struct {
-	// Name represents the typical provider region, for example in AWS: us-east-1
-	Name string `json:"name"`
-	// Id represents the Infrastellar translation of the provider region, for
-	// example when the provider is AWS: use1
-	ID string `json:"id"`
-	// Provider name, for example: "aws" (is all that is supported currently)
-	Provider string `json:"provider"`
-	// AccountID is the provider account id
+	Name      string `json:"name"`
+	ID        string `json:"id"`
+	Provider  string `json:"provider"`
 	AccountID string `json:"account_id"`
+}
+
+type RegionStatus struct {
+	Enabled     bool   `json:"enabled"`
+	Designation string `json:"designation"`
 }
 
 // Root represents the very root of the entire program, including the root
@@ -40,16 +39,45 @@ type Environment struct {
 	Status   EnvironmentStatus `json:"status,omitempty"`
 }
 
+type Environments []Environment
+
+// EnvironmentRegionNetwork prepares a network configuration for a region
+type EnvironmentRegionNetwork struct {
+	Name        string            `json:"name,omitempty"`
+	Cidr        string            `json:"cidr"`
+	Description string            `json:"description,omitempty"`
+	Features    map[string]string `json:"features,omitempty"`
+}
+
+// EnvironmentRegionStatus is a container for the dynamic status of an environment
+type EnvironmentRegionStatus struct {
+	Enabled bool `json:"enabled"`
+	// Designation typically refers to the behavior of the region,
+	// typical values might be "publisher" or "subscriber"
+	Designation string `json:"designation"`
+}
+
+type EnvironmentRegion struct {
+	Region
+
+	// Arrangement represents the order in which regions are added to the
+	// environment. We keep track of this to avoid conflicts down the line when
+	// running procedures.
+	Arrangement int `json:"arrangement"`
+	// Network represents a network that has a name and a CIDR. These are
+	// typically very static structures, and important to the configuration of
+	// an environment region so we manage these here.
+	Network map[string]EnvironmentRegionNetwork `json:"network,omitempty"`
+	Status  EnvironmentRegionStatus
+}
+
 // Program represents a program object and data we need to interact with it
 type Program struct {
 	Name    string `json:"name"`
 	Path    string `json:"path,omitempty"`
-	Url     string `json:"url,omitempty"`
+	URL     string `json:"url,omitempty"`
 	Version struct {
 		Commit string `json:"commit,omitempty"`
 	}
-	Environments []struct {
-		Name string `json:"name"`
-		ID   string `json:"id"`
-	} `json:"environments,omitempty"`
+	Environments Environments
 }
